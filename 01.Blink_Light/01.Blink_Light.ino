@@ -1,6 +1,7 @@
 
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
+  // Make it availabel on Git
   pinMode(LED_BUILTIN, OUTPUT);
 }
 
