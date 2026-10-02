@@ -1,4 +1,6 @@
 // Thermistor parameters from the datasheet
+// Thermistor is NTC 100K
+// Resistor is 10K
 // Setup GND > Thermistor > Resistor (between Thermistor and A0) > A0
 // Now, Resistor 2nd leg > V5
 #define RT0 100000
