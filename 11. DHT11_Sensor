@@ -1,0 +1,22 @@
+// Worked in Mind+, check the legs + V5, - GND, OUT Pin5
+/*!
+ * MindPlus
+ * DFRobot, Arduino Uno
+ */
+#include <DFRobot_DHT.h>
+// Create an object
+DFRobot_DHT dht11_5;
+
+
+
+// Main program start
+void setup() {
+	Serial.begin(9600);
+	dht11_5.begin(5, DHT11);
+}
+void loop() {
+	Serial.print(dht11_5.getTemperature());
+	Serial.print(", ");
+	Serial.println(dht11_5.getHumidity());
+	delay(2000);
+}
