@@ -1,27 +1,51 @@
-int ThermistorPin = A0;
-int Vo;
-float R1 = 1000;
-float logR2, R2, T, Tc, Tf;
-float c1 = 1.009249522e-03, c2 = 2.378405444e-04, c3 = 2.019202697e-07;
+// Thermistor parameters from the datasheet
+// Setup GND > Thermistor > Resistor (between Thermistor and A0) > A0
+// Now, Resistor 2nd leg > V5
+#define RT0 100000
+#define B 3977
+
+// Our series resistor value = 10 kΩ
+#define R 10000  
+
+// Variables for calculations
+float RT, VR, ln, TX, T0, VRT;
 
 void setup() {
-Serial.begin(9600);
+  // Setup serial communication
+  Serial.begin(9600);
+  // Convert T0 from Celsius to Kelvin
+  T0 = 25 + 273.15;
 }
 
 void loop() {
+  // Read the voltage across the thermistor
+  VRT = (5.00 / 1023.00) * analogRead(A0);
+  
+  // Calculate the voltage across the resistor
+  VR = 5.00 - VRT;
 
-  Vo = analogRead(ThermistorPin);
-  R2 = R1 * (1023.0 / (float)Vo - 1.0);
-  logR2 = log(R2);
-  T = (1.0 / (c1 + c2*logR2 + c3*logR2*logR2*logR2));
-  Tc = T - 273.15;
-  Tf = (Tc * 9.0)/ 5.0 + 32.0; 
+  // Calculate resistance of the thermistor
+  RT = VRT / (VR / R);
+  
+  // Calculate temperature from thermistor resistance
+  ln = log(RT / RT0);
+  TX = (1 / ((ln / B) + (1 / T0)));
 
-  Serial.print("Temperature: "); 
-  Serial.print(Tf);
-  Serial.print(" F; ");
-  Serial.print(Tc);
-  Serial.println(" C");   
+  // Convert to Celsius
+  TX = TX - 273.15;
+  
+  Serial.print("Temperature: ");
+  // Display in Celsius
+  Serial.print(TX);                  
+  Serial.print("C\t");
+  
+  // Convert and display in Kelvin
+  Serial.print(TX + 273.15);
+  Serial.print("K\t");
 
-  delay(1000);
+  // Convert and display in Fahrenheit
+  Serial.print((TX * 1.8) + 32);
+  Serial.println("F");
+  
+  delay(5000);
 }
